@@ -1,0 +1,15 @@
+#Folder z konfiguracja VS Code
+.vscode/
+
+#Pliki wykonywalne w src oraz include - z wyjatkiem folderow oraz plikow zawierajacych rozszerzenie
+src/*
+!src/*/
+!src/*.*
+
+include/*
+!include/*/
+!include/*.*
+
+#Pliki binarne po kompilacji
+*.out
+*.o
