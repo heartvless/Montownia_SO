@@ -1,35 +1,34 @@
-#include <iostream>
-#include <unistd.h>
-#include <sys/types.h>
+#include "header.hpp"
 
 int main() {
     
-    std::cout << "POCZATEK PROGRAMU PRZED FORK\n\n";
-    std::cout << "ID GLOWNEGO PROCESU: " << getpid() << "\n\n";
+    std::cout << "PID glownego procesu: " << getpid() << "\n\n";
 
-    //tworzenie dziecka funkcja fork
     pid_t dziecko = fork();
 
-    //sprawdzanie warunków istnienia wzgledem tego co zwroci fork - (< 0: blad), (== 0: dziecko), (inna liczba: rodzic)
     if(dziecko < 0) {
-        
-        //kanal bledow cerr
-        std::cerr << "Blad podczas tworzenia procesu!\n\n";
+
+        std::cerr << "Blad fork!\n\n";
         return 1;
 
     } else if(dziecko == 0) {
 
-        std::cout << "Jestem dzieckiem! Moje PID to: " << getpid() << " , a PID mojego rodzica to: " << getppid();
-        std::cout << "\n\n";
+        std::cout << "Dziecko za chwile podmieni swoj kod funkcji excel!\n\n";
+
+        execl("./potomek", "potomek", NULL);
+
+        std::cerr << "Blad execl!\n\n";
+        return 1;
+        
 
     } else {
 
-        std::cout << "Jestem rodzicem, utworzylem dziecko o PID: " << dziecko << " , a moje wlasne PID to: " << getpid();
-        std::cout << "\n\n";
+        wypisz_pid(getpid(), "rodzic");
+        std::cout << "Czekam az potomek skonczy...\n\n";
+        wait(NULL);
+        std::cout << "Potomek zakonczyl prace. Koniec programu glownego!\n\n";
 
     }
-    
-    std::cout << "KONIEC, wykonany przez proces: " << getpid() << "\n\n";
-    
+
     return 0;
 }
