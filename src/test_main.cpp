@@ -1,34 +1,38 @@
-#include "header.hpp"
+#include <unistd.h>
+#include <sys/wait.h>
+#include "pamiec.hpp"
 
 int main() {
-    
-    std::cout << "PID glownego procesu: " << getpid() << "\n\n";
 
-    pid_t dziecko = fork();
+    key_t klucz = stworz_klucz(".", 'M');
+    int shmid = utworz_dolacz_pamiec(klucz, sizeof(Magazyn));
+    Magazyn* magazyn = podepnij_pamiec(shmid);
 
-    if(dziecko < 0) {
+    magazyn->liczba_czesci = 0;
+    magazyn->czy_gotowe = false;
 
-        std::cerr << "Blad fork!\n\n";
-        return 1;
+    std::cout << "[RODZIC] Start - Liczba czesci: " << magazyn->liczba_czesci << std::endl;
 
-    } else if(dziecko == 0) {
+    pid_t pid = fork();
 
-        std::cout << "Dziecko za chwile podmieni swoj kod funkcji excel!\n\n";
+    if(pid == -1) {
+        perror("Blad fork");
+        odlacz_i_usun_pamiec(magazyn, shmid, true);
+        exit(EXIT_FAILURE);
+    }
+
+    if(pid == 0) {
 
         execl("./potomek", "potomek", NULL);
-
-        std::cerr << "Blad execl!\n\n";
-        return 1;
-        
-
-    } else {
-
-        wypisz_pid(getpid(), "rodzic");
-        std::cout << "Czekam az potomek skonczy...\n\n";
-        wait(NULL);
-        std::cout << "Potomek zakonczyl prace. Koniec programu glownego!\n\n";
-
+        perror("Blad excel");
+        exit(EXIT_FAILURE);
     }
+
+    wait(NULL);
+
+    std::cout << "[RODZIC] Po pracy dziecka. Liczba czesci: " << magazyn->liczba_czesci << std::endl << "[RODZIC] Czy gotowe: " << magazyn->czy_gotowe << std::endl;
+    
+    odlacz_i_usun_pamiec(magazyn, shmid, true);
 
     return 0;
 }
