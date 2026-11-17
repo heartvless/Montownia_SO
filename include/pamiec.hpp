@@ -1,10 +1,6 @@
 #pragma once
-
-#include <iostream>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include <cstdlib>
-#include <cstdio>
 
 struct Magazyn {
 
@@ -13,10 +9,14 @@ struct Magazyn {
 
 };
 
-key_t stworz_klucz(const char*, const char); //tworzy klucz, przyjmuje: tablice char (jako sciezke), char (jako dowolny znak)
+//tworzy klucz przyjmuje: tablice char (jako sciezke), char (jako dowolny znak) | zwraca: klucz key_t
+key_t stworz_klucz(const char*, const char); 
 
-int utworz_dolacz_pamiec(key_t, std::size_t); //dolacza pamiec, przyjmuje: key_t (jako klucz z ftok()), size_t (jako rozmiar z sizeof())
+//tworzy/dolacza pamiec, przyjmuje: key_t (jako klucz z ftok()), size_t (jako rozmiar z sizeof()) | zwraca: shmid int
+int utworz_dolacz_pamiec(key_t, std::size_t);
 
-Magazyn* podepnij_pamiec(int); //podpina pamiec pod wskaznik, przyjmuje: int (jako shmid - shared memory id z funkcji shmget())
+//podpina pamiec pod wskaznik, przyjmuje: int (jako shmid - shared memory id z funkcji shmget()) | zwraca: wskaźnik Magazyn*
+Magazyn* podepnij_pamiec(int);
 
-void odlacz_i_usun_pamiec(Magazyn*, int, bool); //odlacza wskaznik oraz usuwa zarezerwowana wczesiej pamiec, przyjmuje: Magazyn* (jako wskaznik do miejsca w pamieci), int (jako shmid), bool (czy usunac)
+//odlacza wskaznik oraz usuwa zarezerwowana wczesiej pamiec, przyjmuje: Magazyn* (jako wskaznik do miejsca w pamieci), int (jako shmid), bool (czy usunac)
+void odlacz_i_usun_pamiec(Magazyn*, int, bool);

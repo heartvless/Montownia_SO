@@ -1,3 +1,6 @@
+#include <iostream>
+#include <cstdlib>
+#include <cstdio>
 #include "pamiec.hpp"
 
 key_t stworz_klucz(const char *path, const char name_ch) {
@@ -12,9 +15,9 @@ key_t stworz_klucz(const char *path, const char name_ch) {
     return key;
 }
 
-int utworz_dolacz_pamiec(key_t key, std::size_t rozmiar = sizeof(Magazyn)) {
+int utworz_dolacz_pamiec(key_t key, std::size_t size = sizeof(Magazyn)) {
 
-    int shmid = shmget(key, rozmiar, IPC_CREAT | 0600);
+    int shmid = shmget(key, size, IPC_CREAT | 0600);
 
     if (shmid == -1) {
         perror("Blad shmget");
@@ -36,9 +39,9 @@ Magazyn* podepnij_pamiec(int shmid) {
     return static_cast<Magazyn*>(adres);
 }
 
-void odlacz_i_usun_pamiec(Magazyn* wsk, int shmid, bool should_delete) {
+void odlacz_i_usun_pamiec(Magazyn* ptr_mag, int shmid, bool should_delete) {
 
-    if(shmdt(wsk) == -1) {
+    if(shmdt(ptr_mag) == -1) {
         perror("Blad shmdt");
     }
 
