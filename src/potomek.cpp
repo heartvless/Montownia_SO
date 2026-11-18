@@ -1,4 +1,6 @@
+#include <iostream>
 #include "pamiec.hpp"
+#include "semafor.hpp"
 
 int main() {
 
@@ -7,9 +9,14 @@ int main() {
     int shmid = utworz_dolacz_pamiec(key, sizeof(Magazyn));
     Magazyn* magazyn = podepnij_pamiec(shmid);
 
-    std::cout << "[DZIECKO] Wpisuje 777 do pamieci wspoldzielonej" << std::endl;
-    magazyn->liczba_czesci = 777;
-    magazyn->czy_gotowe = true;
+    key_t sem_key = stworz_klucz(".", 'S');
+    int semid = utworz_semafory(sem_key, 1);
+
+    for(int i = 0; i < 100000; i++) {
+        opusc_semafor(semid, 0);
+        magazyn->liczba_czesci++;
+        podnies_semafor(semid, 0);
+    }
 
     odlacz_i_usun_pamiec(magazyn, shmid, false);
 
