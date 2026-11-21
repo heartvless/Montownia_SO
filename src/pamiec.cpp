@@ -29,14 +29,14 @@ int utworz_dolacz_pamiec(key_t key, std::size_t size = sizeof(Magazyn)) {
 
 Magazyn* podepnij_pamiec(int shmid) {
 
-    void* adres = shmat(shmid, NULL, 0);
+    void* addr = shmat(shmid, NULL, 0);
 
-    if(adres == (void*)-1) {
+    if(addr == (void*)-1) {
         perror("Blad shmat");
         exit(EXIT_FAILURE);
     }
 
-    return static_cast<Magazyn*>(adres);
+    return static_cast<Magazyn*>(addr);
 }
 
 void odlacz_i_usun_pamiec(Magazyn* ptr_mag, int shmid, bool should_delete) {
