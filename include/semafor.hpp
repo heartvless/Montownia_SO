@@ -6,6 +6,9 @@
 //tworzy semafory, przyjmuje: key_t (jako klucz z ftok()), int (jako liczba semaforow) | zwraca: semid int
 int utworz_semafory(key_t, int);
 
+//dolacza semafory, przyjmuje: key_t (jako klucz z ftok()), int (jako liczba semaforow) | zwraca: semid int
+int dolacz_semafory(key_t, int);
+
 //ustawia semafor, przyjmuje: int (jako semid), int (jako numer semafora), int (jako wartosc semafora)
 void ustaw_semafor(int, int, int);
 

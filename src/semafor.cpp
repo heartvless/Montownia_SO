@@ -1,14 +1,25 @@
-#include <iostream>
 #include <cstdlib>
 #include <cstdio>
 #include "semafor.hpp"
 
 int utworz_semafory(key_t key, int sem_amount) {
 
-    int semid = semget(key, sem_amount, IPC_CREAT | 0600);
+    int semid = semget(key, sem_amount, IPC_CREAT | IPC_EXCL | 0600);
 
     if(semid == -1) {
-        perror("Blad semget");
+        perror("Blad semget (TWORZENIE)");
+        exit(EXIT_FAILURE);
+    }
+
+    return semid;
+}
+
+int dolacz_semafory(key_t key, int sem_amount) {
+
+    int semid = semget(key, sem_amount, 0600);
+
+    if(semid == -1) {
+        perror("Blad semget (DOLACZANIE)");
         exit(EXIT_FAILURE);
     }
 
