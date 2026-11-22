@@ -5,11 +5,12 @@
 #include <sys/wait.h>
 #include "pamiec.hpp"
 #include "semafor.hpp"
+#include "klucz.hpp"
 
 int main() {
 
     key_t klucz = stworz_klucz(".", 'M');
-    int shmid = utworz_dolacz_pamiec(klucz, sizeof(Magazyn));
+    int shmid = utworz_pamiec(klucz, sizeof(Magazyn));
     Magazyn* magazyn = podepnij_pamiec(shmid);
 
     magazyn->liczba_czesci = 0;
@@ -33,7 +34,7 @@ int main() {
     if(pid == 0) {
 
         execl("./potomek", "potomek", NULL);
-        perror("Blad excel");
+        perror("Blad execl");
         exit(EXIT_FAILURE);
     }
 
