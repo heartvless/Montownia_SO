@@ -9,7 +9,8 @@ struct KomunikatT {
     int weight;
 };
 
-int stworz_pobierz_kolejke(key_t);
+int stworz_kolejke(key_t);
+int dolacz_kolejke(key_t);
 int dodaj_do_kolejki(int, const KomunikatT*);
 int pobierz_z_kolejki(int, KomunikatT*, long);
 int usun_kolejke(int);
